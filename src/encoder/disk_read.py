@@ -4,11 +4,11 @@ import numpy as np
 import torch
 import torchvision
 from loguru import logger
+from particle_filter.filter import ParticleFilter
 
 import encoder.representation_learner
 from encoder.keypoints import KeypointsPredictor, PriorTypes
 from encoder.keypoints_gt import GTKeypointsPredictor
-from particle_filter.filter import ParticleFilter
 from utils.select_gpu import device
 
 
@@ -79,7 +79,7 @@ class DiskReadEncoder(encoder.representation_learner.RepresentationLearner):
 
             rgb, depth, mask = \
                 replay_memory.sample_data_point_with_object_labels(
-                  cam=cam, img_idx=img_idx, traj_idx=traj_idx)
+                    cam=cam, img_idx=img_idx, traj_idx=traj_idx)
 
             descriptor = replay_memory.load_embedding(
                 img_idx=img_idx, traj_idx=traj_idx, cam=cam,
@@ -103,7 +103,7 @@ class DiskReadEncoder(encoder.representation_learner.RepresentationLearner):
                 traj_idx = replay_memory.scene_data.sample_traj_idx(1)
                 preview_frames = replay_memory.sample_bc(
                     None, cam=(cam,), idx=traj_idx, skip_rgb=False
-                    ).cam_rgb.squeeze(1)
+                ).cam_rgb.squeeze(1)
                 indeces = np.linspace(
                     start=0, stop=preview_frames.shape[0] - 1, num=20)
                 indeces = np.round(indeces).astype(int)
@@ -348,5 +348,5 @@ def add_gaussian_noise(coordinates: torch.tensor,
 
     augmented = stacked_coords + noise
 
-    return torch.cat((augmented[..., 0], augmented[..., 1],augmented[..., 2]),
+    return torch.cat((augmented[..., 0], augmented[..., 1], augmented[..., 2]),
                      dim=-1)

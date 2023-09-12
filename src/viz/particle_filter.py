@@ -66,7 +66,8 @@ class ParticleFilterViz:
             w = weights[b][k]
             kp3d = prediction[b][k]
 
-            scp = ax.scatter(c[..., 0], c[..., 1], c[..., 2], c=w, cmap='hot_r')
+            scp = ax.scatter(c[..., 0], c[..., 1],
+                             c[..., 2], c=w, cmap='hot_r')
 
             self.cbars[i] = plt.colorbar(scp, ax=ax)
 
@@ -78,7 +79,8 @@ class ParticleFilterViz:
                 ax.clear()
                 img = rgb2gray(np_channel_front2back(r[b].numpy()))
                 ax.imshow(img, cmap='gray', alpha=0.3, interpolation='none')
-                ax.imshow(h[b][k], alpha=0.7, cmap='hot_r', interpolation='none')
+                ax.imshow(h[b][k], alpha=0.7, cmap='hot_r',
+                          interpolation='none')
                 ax.scatter(kp2d[b][k][0], kp2d[b][k][1], marker="X", c='b')
                 ax.get_xaxis().set_visible(False)
                 ax.get_yaxis().set_visible(False)

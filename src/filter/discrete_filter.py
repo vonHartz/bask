@@ -23,7 +23,6 @@ class DiscreteFilter:
 
         self.reset()
 
-
     def reset(self):
         self.last_kp_raw_2d = tuple((None for _ in range(self.n_cams)))
 

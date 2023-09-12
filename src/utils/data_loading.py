@@ -53,7 +53,6 @@ class ReplenishingDataIterator(InfiniteDataIterator):
         return batch
 
 
-
 def build_data_loaders(replay_memory: Dataset, collate_func: Callable,
                        config: dict, train_workers: int = 1,
                        train_prefetch: int = 1, val_workers: int = 0,
@@ -126,7 +125,7 @@ def build_infinte_data_iterators(
         val_workers: int = 0, val_prefetch: int = 1,
         drop_last: bool = False, shuffle: bool = True,
         full_set_training: bool = False, full_set_eval: bool = False
-        ) -> tuple[InfiniteDataIterator, InfiniteDataIterator]:
+) -> tuple[InfiniteDataIterator, InfiniteDataIterator]:
 
     train_loader, val_loader = build_data_loaders(
         replay_memory, collate_func, config, train_workers, train_prefetch,

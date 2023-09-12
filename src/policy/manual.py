@@ -11,7 +11,6 @@ class ManualPolicy():
 
         self.gripper_open = 0.9
 
-
     def eval(self):
         pass
 

@@ -49,7 +49,7 @@ class ParticleFilter:
         # enforcing consensus. Eg. when multiple kps diverge, they pull the
         # rest with them. And it reduces particle diversity.
         self.use_consistency_model = config["encoder"].get(
-          "use_consistency_model")
+            "use_consistency_model")
         self.consistency_alpha = 128  # 128 # 16  # 0.5  # 0.125
 
         self.use_depth_consistency = False  # True
@@ -67,7 +67,8 @@ class ParticleFilter:
 
         self.ref_pixel_world = ref_pixel_world
 
-        self.refine_initialization = False  # config["encoder"].get("refine_init")
+        # config["encoder"].get("refine_init")
+        self.refine_initialization = False
         self.resample_after_refine = True
         self.refine_consistency_alpha = 1
         # self.use_occlusion_in_depth_consistency = config["encoder"].get(
@@ -99,7 +100,8 @@ class ParticleFilter:
             self.axes = None
 
         if self.dbg_obs_sample:
-            self.re_fig, self.re_axes = plt.subplots(4, 4, figsize=(19.2, 14.4))
+            self.re_fig, self.re_axes = plt.subplots(
+                4, 4, figsize=(19.2, 14.4))
         else:
             self.re_axes = None
 
@@ -197,7 +199,7 @@ class ParticleFilter:
                 self.coordinates, self.weights, mean.to(device), depth, extr,
                 intr)
 
-            for i in range(1): # 2):
+            for i in range(1):  # 2):
                 kp_idx = 0
                 self.axes[2][i].imshow(depth[i].cpu().squeeze(0))
                 self.axes[2][i].imshow(heatmap[i][0, kp_idx], alpha=0.5)
@@ -251,10 +253,10 @@ class ParticleFilter:
             # Add K, P dims to extr, intr and flatten for projection
             b_extr = tuple(
                 e.unsqueeze(1).unsqueeze(1).repeat(1, K, P, 1, 1).reshape(
-                -1, 4, 4) for e in extr)
+                    -1, 4, 4) for e in extr)
             b_intr = tuple(
                 i.unsqueeze(1).unsqueeze(1).repeat(1, K, P, 1, 1).reshape(
-                -1, 3, 3) for i in intr)
+                    -1, 3, 3) for i in intr)
 
             CLIP_VALUE = -1
 
@@ -345,9 +347,10 @@ class ParticleFilter:
                         self.depth_model_sigma_rel,
                         self.depth_model_sigma_abs,
                         re_axes=self.re_axes
-                        )
+                    )
 
-                    random_mask = torch.rand(obs_samples.shape[:-1], device=device) < 0.05
+                    random_mask = torch.rand(
+                        obs_samples.shape[:-1], device=device) < 0.05
                     self.coordinates = torch.where(
                         random_mask.unsqueeze(-1), obs_samples,
                         self.coordinates)
@@ -398,7 +401,7 @@ class ParticleFilter:
             outside_descr_dist_val = tuple(
                 torch.cat([
                     torch.tensor(-d_obj, dtype=torch.float32, device=device
-                                  ).repeat(int(self.n_keypoints/len(d)))
+                                 ).repeat(int(self.n_keypoints/len(d)))
                     for d_obj in d],
                     dim=0).unsqueeze(0).unsqueeze(-1) if type(d) is tuple else
                 torch.tensor(-d, dtype=torch.float32, device=device)
@@ -424,7 +427,7 @@ class ParticleFilter:
 
         if self.use_depth_consistency:
             cons_likelihood = self.query_depth_consistency(
-                    proj_depth, occlusion_likelihood)
+                proj_depth, occlusion_likelihood)
         else:
             cons_likelihood = [1, 1]
 
@@ -487,8 +490,8 @@ class ParticleFilter:
             keypoints_2d = (None, None)
 
         if self.projection_type in (
-                    encoder.keypoints.ProjectionTypes.EGO,
-                    encoder.keypoints.ProjectionTypes.EGO_STEREO) or \
+            encoder.keypoints.ProjectionTypes.EGO,
+            encoder.keypoints.ProjectionTypes.EGO_STEREO) or \
                 self.use_depth_consistency:
             K, P, _ = mean.shape
             _, H, W = depth[0].shape
@@ -607,7 +610,7 @@ class ParticleFilter:
         #     kp_depth[None].expand(B, K, K).reshape((-1, D)),
         #     kp_depth[:, None].expand(B, K, K).reshape(-1, D)).reshape(B, K, K)
         diff = tuple(k[:, :, None].expand(B, K, K) - k[:, None].expand(B, K, K)
-                for k in kp_depth)
+                     for k in kp_depth)
 
         self.last_projected_depth = kp_depth
         self.last_projected_depth_diff = diff
@@ -633,7 +636,7 @@ class ParticleFilter:
             self.last_coordinate_mean[:, :, None].expand(B, K, K, D)[
                 :, :, :, None].expand(B, K, K, P, D).reshape(-1, D),
             self.coordinates[:, None].expand(B, K, K, P, D).reshape(-1, D)
-            ).reshape(B, K, K, P)
+        ).reshape(B, K, K, P)
 
         if bressel_correction:
             if self.t == 1:
@@ -681,14 +684,14 @@ class ParticleFilter:
 
         current_diff = tuple(
             l[:, :, None].expand(B, K, K)[
-                :, :, :, None].expand(B, K, K, P) - \
+                :, :, :, None].expand(B, K, K, P) -
             p[:, None].expand(B, K, K, P) for l, p in zip(
                 self.last_projected_depth, particle_depth))
 
         # set distance to own particles to zero
         current_diff = tuple(c * (1 -
-            torch.eye(K, device=current_diff[0].device)[
-                None, :, :, None].expand(B, K, K, P)) for c in current_diff)
+                                  torch.eye(K, device=current_diff[0].device)[
+                                      None, :, :, None].expand(B, K, K, P)) for c in current_diff)
 
         # print("****")
         # print(current_diff)
@@ -713,7 +716,6 @@ class ParticleFilter:
         kp_occlusion = tuple(w.mean(dim=2) for w in weighted_coords)
         # kp_occlusion = kp_occlusion / kp_occlusion.sum(dim=1, keepdim=True)
 
-
         kp_occlusion = tuple(k[:, :, None].expand(
             B, K, K)[:, :, :, None].expand(B, K, K, P) for k in kp_occlusion)
 
@@ -725,8 +727,8 @@ class ParticleFilter:
 
         cons_likelihood = tuple(
             torch.exp(- self.depth_consistency_alpha * torch.sum(
-            same_object * k * torch.abs(
-                c - l[:, :, :, None].expand(B, K, K, P)), dim=1))
+                same_object * k * torch.abs(
+                    c - l[:, :, :, None].expand(B, K, K, P)), dim=1))
             for k, c, l in zip(kp_occlusion, current_diff,
                                self.last_projected_depth_diff))
 
@@ -893,7 +895,6 @@ def sample_from_obs(depth: tuple, extr: tuple, intr: tuple, diffs: tuple,
                 samples[0].cpu()[0, i, :, 0], samples[0].cpu()[0, i, :, 1],
                 color='r')
 
-
     # project into scene
     depth = tuple(d.unsqueeze(1).repeat(1, K, 1, 1).reshape(B*K, H, W)
                   for d in depth)
@@ -934,7 +935,7 @@ def refine_with_prior(coordinates: torch.Tensor, ref_coordinates: torch.Tensor,
     ref_dist = torch.functional.F.pairwise_distance(
         ref_coordinates[:, :, None].expand(1, K, K, D).reshape((-1, D)),
         ref_coordinates[:, None].expand(1, K, K, D).reshape(-1, D)
-        ).reshape(1, K, K)
+    ).reshape(1, K, K)
 
     current_mean = coordinates.mean(dim=2)
 
@@ -986,6 +987,7 @@ def get_pairwise_distance(descriptors: torch.Tensor):
 
     return dist
 
+
 def stratified_resample(weights: torch.Tensor) -> torch.Tensor:
     n_particles = weights.shape[-1]
     positions = (torch.rand_like(weights) +
@@ -1004,6 +1006,7 @@ def stratified_resample(weights: torch.Tensor) -> torch.Tensor:
 
     return indeces.long()
 
+
 def systematic_resample(weights: torch.Tensor) -> torch.Tensor:
     n_particles = weights.shape[-1]
 
@@ -1012,7 +1015,7 @@ def systematic_resample(weights: torch.Tensor) -> torch.Tensor:
             1, 1, n_particles) + torch.arange(
                 n_particles, device=device).unsqueeze(0).unsqueeze(0).repeat(
                     weights.shape[0], weights.shape[1], 1)
-                 ) / n_particles
+    ) / n_particles
 
     indeces = torch.empty_like(positions, dtype=torch.double)
     cumulative_sum = torch.cumsum(weights, dim=-1)

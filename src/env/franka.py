@@ -60,9 +60,11 @@ dist_coeffs = np.array(
 def pad_list(source, target_len=2):
     return source + [None] * (target_len - len(source))
 
+
 def subsample_image(img):
     return torch.nn.functional.interpolate(
-            img, size=(256, 256), mode='bilinear', align_corners=True)
+        img, size=(256, 256), mode='bilinear', align_corners=True)
+
 
 def clamp_translation(position, delta, limits):
     goal = position + delta*0.25
@@ -173,7 +175,8 @@ class FrankaEnv(BaseEnvironment):
         self.trans = tf.TransformListener()
 
         self.win_rgb_name = 'Wrist rgb stream'
-        self.camera_rgb_window = cv2.namedWindow(self.win_rgb_name, cv2.WINDOW_AUTOSIZE)
+        self.camera_rgb_window = cv2.namedWindow(
+            self.win_rgb_name, cv2.WINDOW_AUTOSIZE)
 
         self.reset()
 
@@ -273,7 +276,7 @@ class FrankaEnv(BaseEnvironment):
 
     def _step(self, action: np.ndarray, postprocess: bool = True,
               delay_gripper: bool = True, scale_action: bool = True,
-              invert_action : tuple[bool] = tuple((True, False, True)),
+              invert_action: tuple[bool] = tuple((True, False, True)),
               ) -> tuple[SceneObservation, float, bool, dict]:
         """
         Postprocess the action and execute it in the environment.
@@ -453,8 +456,9 @@ class FrankaEnv(BaseEnvironment):
 
         cv2.waitKey(1)
 
-
     def get_camera_pose(self, topic_name):
-        cam_position, cam_quaternion = self.trans.lookupTransform('/base_link', topic_name, rospy.Time(0))
-        cam_rot_matrix = tf.transformations.quaternion_matrix(cam_quaternion)[:3, :3]
+        cam_position, cam_quaternion = self.trans.lookupTransform(
+            '/base_link', topic_name, rospy.Time(0))
+        cam_rot_matrix = tf.transformations.quaternion_matrix(cam_quaternion)[
+            :3, :3]
         return homogenous_transform_from_rot_shift(cam_rot_matrix, cam_position)

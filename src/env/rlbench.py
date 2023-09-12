@@ -1,11 +1,11 @@
 import os
 
 import numpy as np
+import rlbench
 import torch
 from loguru import logger
 from pyrep.const import RenderMode
 from pyrep.errors import IKError
-import rlbench
 from rlbench.action_modes import ActionMode, ArmActionMode
 from rlbench.backend.observation import Observation as RLBenchObservation
 from rlbench.observation_config import CameraConfig, ObservationConfig
@@ -127,7 +127,7 @@ class RLBenchEnvironment(BaseEnvironment):
         }
 
         self.camera_map = {k: v for k, v in camera_map.items()
-                             if k in self.cameras}
+                           if k in self.cameras}
 
     def reset(self):
         super().reset()

@@ -185,7 +185,8 @@ encoder_configs = {
             "vision_net": 'Resnet101_8s',  # Resnet101_8s
             # "dynamics_hidden_dims": [500, 500],
             "prior_type": PriorTypes.PARTICLE_FILTER,
-            "descriptor_distance_for_outside_pixels": (1.5, 1.0),  # (0.5, 0.75),
+            # (0.5, 0.75),
+            "descriptor_distance_for_outside_pixels": (1.5, 1.0),
             "filter_noise_scale": 0.01,  # #001  #004,
             "taper_sm": 4,
             "use_motion_model": True,

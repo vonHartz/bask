@@ -106,8 +106,8 @@ class BCDataset(Dataset):
 
     def sample_data_point_with_object_labels(
             self, cam: str = "wrist", traj_idx: int | None = None,
-            img_idx: int | None =None
-            ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+            img_idx: int | None = None
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
 
         get_mask = False if self.config["mask_type"] in [
             None, MaskTypes.NONE] else True
@@ -147,7 +147,6 @@ class BCDataset(Dataset):
             labels = None
         else:
             raise ValueError("Could not get labels for type {}".format(type))
-
 
         if label_subset := self.config.get("only_use_labels"):
             for l in label_subset:

@@ -31,7 +31,6 @@ class PolicyEnum(Enum):
     MOTION_PLANNER = "motion_planner"
 
 
-
 def get_policy_class(policy_name, disk_read=False):
     if disk_read:
         return DiskReadEncoderPolicy

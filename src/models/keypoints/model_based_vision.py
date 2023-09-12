@@ -99,7 +99,7 @@ def raw_pixels_to_3D_world(
         depth,     # N, H, W, on cpu
         camera_to_world,  # N, 4, 4 , on cpu
         K              # N, 3, 3, on cpu
-        ):
+):
     """
     Like the function above, but takes raw pixels, ie. in [0,H/W]), not [-1.1].
     """
@@ -138,7 +138,7 @@ def raw_pixels_to_camera_frame(
         y_vision,  # N, 2*k, where x features are stacked on top of y features
         depth,     # N, H, W, on cpu
         K              # N, 3, 3, on cpu
-        ):
+):
     N = y_vision.shape[0]
     k = int(y_vision.shape[1]/2)
     y_vision_3d = torch.zeros(N, k, 3).to(device)
@@ -167,6 +167,7 @@ def raw_pixels_to_camera_frame(
             y_vision_3d[i, j, 2] = point_3d_cam[2]
 
     return y_vision_3d
+
 
 def compute_expected_z(softmax_activations, depth):
     """

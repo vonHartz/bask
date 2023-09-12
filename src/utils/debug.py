@@ -48,11 +48,11 @@ def summarize_list_of_tensors(tensor_list, keep_last_dim=False):
 def summarize_by_dim(tensor, keep_last_dim):
     tensor = tensor.flatten(end_dim=-2 if keep_last_dim else -1)
     return {
-            "mean": tensor.mean(dim=0),
-            "var": tensor.var(dim=0),
-            "max": tensor.max(dim=0)[0],
-            "min": tensor.min(dim=0)[0],
-            }
+        "mean": tensor.mean(dim=0),
+        "var": tensor.var(dim=0),
+        "max": tensor.max(dim=0)[0],
+        "min": tensor.min(dim=0)[0],
+    }
 
 
 def summarize_dataclass(obj):

@@ -138,7 +138,7 @@ class EncoderPseudoPolicy():
 
         try:  # for other kp encoder
             self.encoder._reference_descriptor_vec = state_dict[
-                "encoder._reference_descriptor_vec" if is_policy_checkpoint \
+                "encoder._reference_descriptor_vec" if is_policy_checkpoint
                 else "_reference_descriptor_vec"].to(device)
 
         except KeyError:  # in gt_kp encoder ref descriptor does not exist
@@ -196,7 +196,6 @@ class DiskReadEncoderPolicy(EncoderPseudoPolicy, EncoderPolicy):
         # Skip Module init here, as the encoder is not defined in Policy and
         # thus would get lost upon Module init.
         Policy.__init__(self, config, skip_module_init=True)
-
 
     def to_disk(self, file_name: str) -> None:
         logger.info("Saving policy:")

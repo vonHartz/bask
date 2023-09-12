@@ -23,6 +23,7 @@ from viz.operations import (channel_front2back, get_image_tensor_mean,
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
+
 class DcDatasetDataType:
     SINGLE_OBJECT_WITHIN_SCENE = 0
     SINGLE_OBJECT_ACROSS_SCENE = 1
@@ -259,7 +260,7 @@ class DenseCorrespondenceDataset(Dataset):
         return obs1.rgb, obs2.rgb
 
     def sample_dc(self, cams: tuple[str], contr_cam: tuple[str] | None,
-                   traj_idx: int, img_idx: int) -> tuple:
+                  traj_idx: int, img_idx: int) -> tuple:
         """
         Randomly chooses one of our different img pair types and camera conf,
         then returns that type of data.
@@ -768,7 +769,7 @@ class DenseCorrespondenceDataset(Dataset):
         traj_idx_b = dataset_b.sample_traj_idx()
         img_idx_b = dataset_b.sample_img_idx(traj_idx_b)
 
-        image_a1_rgb, image_a2_rgb, image_a1_depth, image_a2_depth,\
+        image_a1_rgb, image_a2_rgb, image_a1_depth, image_a2_depth, \
             image_a1_mask, image_a2_mask, uv_a1, uv_a2 =\
             self.get_within_scene_data(
                 traj_idx_a, img_idx_a, object_label_a, cam_a, cam_b,
@@ -780,7 +781,7 @@ class DenseCorrespondenceDataset(Dataset):
             return self.return_empty_data(
                 image_a1_rgb, image_a1_rgb)
 
-        image_b1_rgb, image_b2_rgb, image_b1_depth, image_b2_depth,\
+        image_b1_rgb, image_b2_rgb, image_b1_depth, image_b2_depth, \
             image_b1_mask, image_b2_mask, uv_b1, uv_b2 =\
             self.get_within_scene_data(
                 traj_idx_b, img_idx_b, object_label_b, cam_a, cam_b,
@@ -1083,7 +1084,7 @@ class DenseCorrespondenceDataset(Dataset):
 
     def estimate_image_mean_and_std(
             self, num_image_samples: int = 10, cam: tuple[str] = ("wrist",)
-            ) -> tuple[torch.FloatTensor, torch.FloatTensor]:
+    ) -> tuple[torch.FloatTensor, torch.FloatTensor]:
         """
         Estimate the image_mean and std_dev by sampling from scene images.
         Returns two torch.FloatTensor objects, each of size [3]

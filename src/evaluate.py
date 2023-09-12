@@ -5,11 +5,11 @@ from argparse import ArgumentParser
 
 import numpy as np
 import torch
+import wandb
 from loguru import logger
 from tqdm.auto import tqdm
 
 import utils.logging  # noqa
-import wandb
 from config import (camera_pose, encoder_configs, realsense_cam_crop,
                     realsense_cam_resolution_cropped, sim_cam_resolution)
 from encoder import encoder_names
@@ -70,7 +70,7 @@ def run_simulation(env: BaseEnvironment, policy: Policy, episodes: int,
             "reward": episode_reward,
             "episode": episode,
             "eps_lenght": episode_length
-            })
+        })
 
         if keypoint_viz is not None:
             keypoint_viz.reset()
@@ -81,6 +81,7 @@ def run_simulation(env: BaseEnvironment, policy: Policy, episodes: int,
     env.close()
 
     return
+
 
 def run_episode(env: BaseEnvironment, keyboard_obs: KeyboardObserver | None,
                 policy: Policy, horizon: int | None,
@@ -411,7 +412,7 @@ if __name__ == "__main__":
             "encoder": args.encoder,
             "encoder_config": selected_encoder_config,
             "suffix": suffix,
-            },
+        },
         "dataset_config": {
             "feedback_type": args.feedback_type,
             "task": args.task,

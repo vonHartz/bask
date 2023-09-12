@@ -15,6 +15,7 @@ def configure_seeds(args: argparse.Namespace) -> int:
     set_seeds(seed)
     return seed
 
+
 def set_seeds(seed: int = 0) -> None:
     """Sets all seeds."""
     torch.manual_seed(seed)

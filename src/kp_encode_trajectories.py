@@ -36,7 +36,6 @@ def encode_trajectories(policy: EncoderPseudoPolicy,
     cam_names = config["dataset_config"]["cameras"]
     n_cams = len(cam_names)
 
-
     using_pf = config["policy_config"]["encoder_config"]["encoder"].get(
         "prior_type", None) is PriorTypes.PARTICLE_FILTER
     dbg = config["policy_config"]["encoder_config"]["training"].get("debug")
@@ -71,7 +70,7 @@ def encode_trajectories(policy: EncoderPseudoPolicy,
 
 
 def save_particle_debug(replay_memory: BCDataset, encoder_name: str,
-                        kp_selection_name:str, cam_names: tuple[str],
+                        kp_selection_name: str, cam_names: tuple[str],
                         traj_no: int, obs_no: int, info: dict) -> None:
 
     for i, cn in enumerate(cam_names):
@@ -121,6 +120,7 @@ def save_discrete_filter_debug(replay_memory: BCDataset, encoder_name: str,
                                    encoder_name, kp_selection_name)
         replay_memory.add_encoding(traj_no, step, cn, "post", po,
                                    encoder_name, kp_selection_name)
+
 
 def main(config: dict, path: str | None, kp_selection_name: str,
          copy_selection_from: str | None = None) -> None:
@@ -256,7 +256,7 @@ if __name__ == "__main__":
         "image_dim": image_dim,
         "n_cams": n_cams,
         "disk_read_embedding": True,
-        }
+    }
 
     config = {
         "training_config": {
@@ -273,7 +273,7 @@ if __name__ == "__main__":
             "encoder_config": selected_encoder_config,
             "encoder_suffix": args.encoder_suffix,
             "end-to-end": False,  # whether or not to train the encoder too
-            },
+        },
 
         "dataset_config": {
             "feedback_type": args.feedback_type,

@@ -279,9 +279,9 @@ def create_non_correspondences(uv_b_matches, img_b_shape,
     upper_bound_vec = torch.ones_like(uv_b_non_matches_0_flat) * upper_bound
 
     uv_b_non_matches_0_flat = torch.where(
-            uv_b_non_matches_0_flat > upper_bound_vec,
-            uv_b_non_matches_0_flat - upper_bound_vec,
-            uv_b_non_matches_0_flat)
+        uv_b_non_matches_0_flat > upper_bound_vec,
+        uv_b_non_matches_0_flat - upper_bound_vec,
+        uv_b_non_matches_0_flat)
 
     uv_b_non_matches_0_flat = torch.where(
         uv_b_non_matches_0_flat < lower_bound_vec,

@@ -50,7 +50,6 @@ class GripperPlot:
             self.set_data(1)
             plt.pause(0.1)
 
-
     def set_data(self, new_state: float) -> None:
         """
         Set the gripper plot to the given gripper state.
@@ -144,8 +143,8 @@ class BaseEnvironment(ABC):
 
     @abstractmethod
     def _step(self, action: np.ndarray, postprocess: bool = True,
-             delay_gripper: bool = True, scale_action: bool = True,
-             *args) -> tuple[SceneObservation, float, bool, dict]:
+              delay_gripper: bool = True, scale_action: bool = True,
+              *args) -> tuple[SceneObservation, float, bool, dict]:
         """
         Postprocess the action and execute it in the environment.
         """

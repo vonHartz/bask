@@ -161,7 +161,7 @@ class Resnet18_8s(nn.Module):
         x = nn.functional.upsample(
             x, size=input_spatial_dim, mode='bilinear', align_corners=True)
 
-        #x = nn.functional.upsample_bilinear(input=x, size=input_spatial_dim)#, align_corners=False)
+        # x = nn.functional.upsample_bilinear(input=x, size=input_spatial_dim)#, align_corners=False)
 
         return x
 

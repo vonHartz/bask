@@ -53,7 +53,8 @@ def embed_trajectories(encoder: RepresentationLearner, replay_memory: BCDataset,
                 save_encoding(replay_memory, config, encoder_name, cam_names,
                               n_cams, traj_no, step, embedding, info)
 
-def save_encoding(replay_memory: BCDataset, config: dict, encoder_name:str,
+
+def save_encoding(replay_memory: BCDataset, config: dict, encoder_name: str,
                   cam_names: tuple[str], n_cams: int, traj_no: int,
                   obs_no: int, embedding: torch.Tensor, info: dict) -> None:
 
@@ -234,7 +235,7 @@ if __name__ == "__main__":
             "encoder_config": selected_encoder_config,
             "encoder_suffix": args.encoder_suffix,
             "end-to-end": False,  # whether or not to train the encoder too
-            },
+        },
 
         "dataset_config": {
             "feedback_type": args.feedback_type,

@@ -15,6 +15,7 @@ except Exception as err:
 
 kilo = 1024
 
+
 def try_empty_cuda_cache():
     try:
         empty_cuda_cache()
@@ -74,6 +75,7 @@ def debug_memory(device):
         total /= kilo**3
         logger.info("{:.1f} GB of {:.1f} GB total memory are free on device {}",
                     free, total, device)
+
 
 def try_debug_memory(device):
     if FUSION_GPU_MODE:

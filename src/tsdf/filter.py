@@ -10,13 +10,13 @@ project = VisionSensor.pointcloud_from_depth_and_camera_params
 coordinate_boxes = {
     Environment.MANISKILL: np.array([[-0.75, 0.75],   # x  # TODO: set
                                      [-0.75, 0.75],   # y
-                                     [ 0.   ,2.  ]]), # z
+                                     [0., 2.]]),  # z
     Environment.PANDA:     np.array([[-0.60, 1.35],
                                      [-0.85, 0.85],
-                                     [ 0.5,  1.9]]),
+                                     [0.5,  1.9]]),
     Environment.RLBENCH:   np.array([[-0.15, 1.35],
                                      [-0.85, 0.85],
-                                     [ 0.76, 1.75]])
+                                     [0.76, 1.75]])
 }
 
 gripper_dists = {
@@ -24,6 +24,7 @@ gripper_dists = {
     Environment.PANDA:     0.05,
     Environment.RLBENCH:   0.1
 }
+
 
 def cut_volume_with_box(vol_bnd: np.ndarray, box: np.ndarray) -> np.ndarray:
     refined = np.zeros_like(vol_bnd)

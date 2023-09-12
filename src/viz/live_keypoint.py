@@ -78,7 +78,7 @@ class LiveKeypoints:
             ax.imshow(img, cmap='gray', alpha=0.3, interpolation='none')
             # TODO: how to plot particles? One color per kp?
             particles = torch.sum(T.functional.gaussian_blur(particles[0], 9, 4),
-                dim=0)
+                                  dim=0)
             ax.imshow(particles, interpolation='none', alpha=0.5)
             # ax.imshow(particles.squeeze(0), alpha=0.7, cmap='hot_r',
             #           interpolation='none')
@@ -138,7 +138,7 @@ class LiveKeypoints:
                 colors = "r"
             else:
                 colors = ["w" if not b else "r" if d < self.threshold else "b"
-                        for d, b in zip(dist, best)]
+                          for d, b in zip(dist, best)]
             # print(dist)
             ax.scatter(pos_x, pos_y, c=colors)
             for i, txt in enumerate(range(n_points)):
@@ -159,7 +159,7 @@ class LiveKeypoints:
                 pass
 
         if (config["policy_config"]["encoder"] in ["keypoints", "keypoints_gt",
-                                                "transporter"]
+                                                   "transporter"]
                 and config["eval_config"]["viz"]):
             n_channel = 1
             if config["policy_config"]["encoder"] == "keypoints_gt":
@@ -186,7 +186,7 @@ class LiveKeypoints:
                     channels_to_show = config["eval_config"]["show_channels"]
                 n_channel = len(channels_to_show)
                 fig_types = ["{} kp {}".format(f, k) for k in channels_to_show
-                            for f in ("prior", "sm", "post")]
+                             for f in ("prior", "sm", "post")]
             else:
                 viz = VizType.IMG_W_SPP  # IMG
                 fig_types = ["cam", "prior", "sm", "post"]
@@ -200,7 +200,7 @@ class LiveKeypoints:
             fig_names = [
                 "{} cam {}".format(j, i)
                 for i in range(n_cams) for j in fig_types] + \
-                    (["kp height"] if viz == VizType.PARTICLE else [])
+                (["kp height"] if viz == VizType.PARTICLE else [])
 
             n_rows = (n_cams*n_channel + (1 if viz == VizType.PARTICLE else 0))
 
@@ -215,18 +215,19 @@ class LiveKeypoints:
         return keypoint_viz
 
     def update_from_info(self, info, obs):
-        particles = [None for _ in range(self.n_cams) for _ in range(self.n_figs)]
+        particles = [None for _ in range(self.n_cams)
+                     for _ in range(self.n_figs)]
 
         cam_obs_map = {"wrist": obs.cam_w_rgb,
                        "overhead": obs.cam_o_rgb}
 
         if self.viz in [VizType.DESCRIPTOR, VizType.DEPTH, VizType.IMG,
-                VizType.IMG_W_SPP, VizType.SPP_PER_KP]:
+                        VizType.IMG_W_SPP, VizType.SPP_PER_KP]:
             encodings = info["kp_raw_2d"]
             distance = info["distance"]
 
             encodings = [t.squeeze(0)
-                        for t in encodings for _ in range(self.n_figs)]
+                         for t in encodings for _ in range(self.n_figs)]
             distance = [t.squeeze(0) if t is not None else None
                         for t in distance for _ in range(self.n_figs)]
 
@@ -246,7 +247,7 @@ class LiveKeypoints:
         elif self.viz is VizType.IMG_W_SPP:
             if info["prior"][0] is None:
                 prior = tuple((torch.empty(1, 16, 32, 32)
-                            for _ in range(self.n_cams)))
+                               for _ in range(self.n_cams)))
             else:
                 prior = info["prior"]
             embeddings = list(itertools.chain(*zip(
@@ -256,20 +257,20 @@ class LiveKeypoints:
         elif self.viz is VizType.SPP_PER_KP:
             if info["prior"][0] is None:
                 prior = tuple((torch.empty(1, 16, 32, 32)
-                            for _ in range(self.n_cams)))
+                               for _ in range(self.n_cams)))
             else:
                 prior = info["prior"]
             sm, post = info["sm"], info["post"]
             n_kp = sm[0].shape[1]
             n_emb = 3
             embeddings = [e[c][0][k].unsqueeze(0).cpu()
-                        for c in range(self.n_cams)
-                        for k in range(n_kp)
-                        for e in (prior, sm, post)
-                        if k in self.channels_to_show]
+                          for c in range(self.n_cams)
+                          for k in range(n_kp)
+                          for e in (prior, sm, post)
+                          if k in self.channels_to_show]
             # get the respective keypoint
             channel = [c for c in self.channels_to_show
-                    for _ in range(n_emb)]
+                       for _ in range(n_emb)]
             encodings = [e.cpu().index_select(0, torch.tensor(
                 [i, i + n_kp]))
                 for i, e in zip(channel, encodings)]
@@ -309,7 +310,7 @@ class LiveKeypoints:
             else:
                 best = best_cam == i
             self.update(k, enc, emb, dist, best,
-                                particles=particles[k])
+                        particles=particles[k])
         if self.viz is VizType.PARTICLE:
             self.update(-1, None, None, None, None, None,
-                                world_coords=world_coords)
+                        world_coords=world_coords)

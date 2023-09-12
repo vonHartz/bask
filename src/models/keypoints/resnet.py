@@ -119,7 +119,7 @@ class ResNet(nn.Module):
                  remove_avg_pool_layer=False,
                  output_stride=32,
                  additional_blocks=0,
-                 multi_grid=(1,1,1) ):
+                 multi_grid=(1, 1, 1)):
 
         # Add additional variables to track
         # output stride. Necessary to achieve
@@ -142,24 +142,31 @@ class ResNet(nn.Module):
         self.layer1 = self._make_layer(block, 64, layers[0])
         self.layer2 = self._make_layer(block, 128, layers[1], stride=2)
         self.layer3 = self._make_layer(block, 256, layers[2], stride=2)
-        self.layer4 = self._make_layer(block, 512, layers[3], stride=2, multi_grid=multi_grid)
+        self.layer4 = self._make_layer(
+            block, 512, layers[3], stride=2, multi_grid=multi_grid)
 
         self.additional_blocks = additional_blocks
 
         if additional_blocks == 1:
 
-            self.layer5 = self._make_layer(block, 512, layers[3], stride=2, multi_grid=multi_grid)
+            self.layer5 = self._make_layer(
+                block, 512, layers[3], stride=2, multi_grid=multi_grid)
 
         if additional_blocks == 2:
 
-            self.layer5 = self._make_layer(block, 512, layers[3], stride=2, multi_grid=multi_grid)
-            self.layer6 = self._make_layer(block, 512, layers[3], stride=2, multi_grid=multi_grid)
+            self.layer5 = self._make_layer(
+                block, 512, layers[3], stride=2, multi_grid=multi_grid)
+            self.layer6 = self._make_layer(
+                block, 512, layers[3], stride=2, multi_grid=multi_grid)
 
         if additional_blocks == 3:
 
-            self.layer5 = self._make_layer(block, 512, layers[3], stride=2, multi_grid=multi_grid)
-            self.layer6 = self._make_layer(block, 512, layers[3], stride=2, multi_grid=multi_grid)
-            self.layer7 = self._make_layer(block, 512, layers[3], stride=2, multi_grid=multi_grid)
+            self.layer5 = self._make_layer(
+                block, 512, layers[3], stride=2, multi_grid=multi_grid)
+            self.layer6 = self._make_layer(
+                block, 512, layers[3], stride=2, multi_grid=multi_grid)
+            self.layer7 = self._make_layer(
+                block, 512, layers[3], stride=2, multi_grid=multi_grid)
 
         self.avgpool = nn.AvgPool2d(7)
 
@@ -169,7 +176,7 @@ class ResNet(nn.Module):
             self.avgpool = nn.AvgPool2d(7, padding=3, stride=1)
             # In the latest unstable torch 4.0 the tensor.copy_
             # method was changed and doesn't work as it used to be
-            #self.fc = nn.Conv2d(512 * block.expansion, num_classes, 1)
+            # self.fc = nn.Conv2d(512 * block.expansion, num_classes, 1)
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -178,7 +185,6 @@ class ResNet(nn.Module):
             elif isinstance(m, nn.BatchNorm2d):
                 m.weight.data.fill_(1)
                 m.bias.data.zero_()
-
 
     def _make_layer(self,
                     block,
@@ -190,7 +196,6 @@ class ResNet(nn.Module):
         downsample = None
 
         if stride != 1 or self.inplanes != planes * block.expansion:
-
 
             # Check if we already achieved desired output stride.
             if self.current_stride == self.output_stride:
@@ -205,7 +210,6 @@ class ResNet(nn.Module):
                 # new output stride.
                 self.current_stride = self.current_stride * stride
 
-
             # We don't dilate 1x1 convolution.
             downsample = nn.Sequential(
                 nn.Conv2d(self.inplanes, planes * block.expansion,
@@ -215,15 +219,18 @@ class ResNet(nn.Module):
 
         layers = []
 
-        dilation = multi_grid[0] * self.current_dilation if multi_grid else self.current_dilation
+        dilation = multi_grid[0] * \
+            self.current_dilation if multi_grid else self.current_dilation
 
-        layers.append(block(self.inplanes, planes, stride, downsample, dilation=dilation))
+        layers.append(block(self.inplanes, planes, stride,
+                      downsample, dilation=dilation))
 
         self.inplanes = planes * block.expansion
 
         for i in range(1, blocks):
 
-            dilation = multi_grid[i] * self.current_dilation if multi_grid else self.current_dilation
+            dilation = multi_grid[i] * \
+                self.current_dilation if multi_grid else self.current_dilation
             layers.append(block(self.inplanes, planes, dilation=dilation))
 
         return nn.Sequential(*layers)
@@ -273,12 +280,12 @@ def resnet18(pretrained=False, **kwargs):
     """
     model = ResNet(BasicBlock, [2, 2, 2, 2], **kwargs)
 
-
     if pretrained:
 
         if model.additional_blocks:
 
-            model.load_state_dict(model_zoo.load_url(model_urls['resnet18']), strict=False)
+            model.load_state_dict(model_zoo.load_url(
+                model_urls['resnet18']), strict=False)
 
             return model
 
@@ -299,7 +306,8 @@ def resnet34(pretrained=False, **kwargs):
 
         if model.additional_blocks:
 
-            model.load_state_dict(model_zoo.load_url(model_urls['resnet34']), strict=False)
+            model.load_state_dict(model_zoo.load_url(
+                model_urls['resnet34']), strict=False)
 
             return model
 
@@ -320,12 +328,12 @@ def resnet50(pretrained=False, **kwargs):
 
         if model.additional_blocks:
 
-            model.load_state_dict(model_zoo.load_url(model_urls['resnet50']), strict=False)
+            model.load_state_dict(model_zoo.load_url(
+                model_urls['resnet50']), strict=False)
 
             return model
 
         model.load_state_dict(model_zoo.load_url(model_urls['resnet50']))
-
 
     return model
 
@@ -338,20 +346,18 @@ def resnet101(pretrained=False, **kwargs):
     """
     model = ResNet(Bottleneck, [3, 4, 23, 3], **kwargs)
 
-
     if pretrained:
 
         if model.additional_blocks:
 
-            model.load_state_dict(model_zoo.load_url(model_urls['resnet101']), strict=False)
+            model.load_state_dict(model_zoo.load_url(
+                model_urls['resnet101']), strict=False)
 
             return model
 
         model.load_state_dict(model_zoo.load_url(model_urls['resnet101']))
 
-
     return model
-
 
 
 def resnet152(pretrained=False, **kwargs):

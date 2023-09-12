@@ -56,7 +56,7 @@ class Policy(nn.Module):
                      lstm_state: tuple[torch.Tensor, torch.Tensor] | None,
                      ) -> tuple[torch.Tensor,
                                 tuple[torch.Tensor, torch.Tensor], dict]:
-        vis_encoding, info = self.encoder(obs) # type: ignore
+        vis_encoding, info = self.encoder(obs)  # type: ignore
 
         vis_encoding = torch.flatten(vis_encoding, start_dim=1)
 
@@ -134,7 +134,7 @@ class Policy(nn.Module):
         torch.save(self.state_dict(), checkpoint_path)
 
     def initialize_parameters_via_dataset(self, replay_memory: BCDataset,
-                                           cameras: tuple[str]) -> None:
+                                          cameras: tuple[str]) -> None:
         logger.info("This policy does not use dataset initialization.")
 
     def reset_episode(self, env: BaseEnvironment | None = None) -> None:
