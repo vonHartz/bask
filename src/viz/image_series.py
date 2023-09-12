@@ -26,7 +26,8 @@ def vis_series(img_tensor, channeled=True, file_name=None):
         x = i // no_cols
         y = i % no_cols
         ax = fig.add_subplot(gs[x, y])
-        img_i = channel_front2back(img_tensor[i]) if channeled else img_tensor[i]
+        img_i = channel_front2back(
+            img_tensor[i]) if channeled else img_tensor[i]
         ax.imshow(img_i)
         ax.axis('off')
         ax.set_aspect('equal')
@@ -63,8 +64,10 @@ def vis_series_w_mask(img_tensor, mask):
         x = i // no_cols
         y = i % no_cols
         ax = plt.subplot(gs[x, y])
-        ax.imshow(rgb2gray(channel_front2back(img_tensor[i])), cmap='gray', alpha=0.5)
-        ax.imshow(mask[i], cmap=mask_map, alpha=0.8, interpolation='none', vmin=0, vmax=9)
+        ax.imshow(rgb2gray(channel_front2back(
+            img_tensor[i])), cmap='gray', alpha=0.5)
+        ax.imshow(mask[i], cmap=mask_map, alpha=0.8,
+                  interpolation='none', vmin=0, vmax=9)
         ax.axis('off')
         ax.set_aspect('equal')
     plt.subplots_adjust(wspace=0, hspace=0)

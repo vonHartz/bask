@@ -21,8 +21,10 @@ def channel_front2back_batch(camera_obs):
 def np_channel_front2back(camera_obs):
     return np.transpose(camera_obs, (1, 2, 0))
 
+
 def np_channel_back2front(camera_obs):
     return np.transpose(camera_obs, (2, 0, 1))
+
 
 def channel_back2front(camera_obs):
     return camera_obs.permute(2, 0, 1)

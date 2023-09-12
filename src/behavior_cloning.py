@@ -5,12 +5,12 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import wandb
 from loguru import logger
 from tqdm.auto import tqdm
 
 import config as default_config
 import utils.logging  # noqa
-import wandb
 from dataset.bc import BCDataset
 from encoder import encoder_names
 from encoder.keypoints import PriorTypes
@@ -99,13 +99,14 @@ def run_eval_step(policy: Policy, val_iterator: InfiniteDataIterator) -> dict:
             eval_metrics.append(policy.evaluate(batch.to(device)))
 
         eval_metrics = {
-                        k: torch.cat([d[k].unsqueeze(0)
-                                      for d in eval_metrics]).mean()
-                        for k in eval_metrics[0]}
+            k: torch.cat([d[k].unsqueeze(0)
+                          for d in eval_metrics]).mean()
+            for k in eval_metrics[0]}
 
     policy.train()
 
     return eval_metrics
+
 
 def run_training_step(policy: Policy, train_iterator: InfiniteDataIterator
                       ) -> dict:
@@ -139,7 +140,7 @@ def main(config: dict, path: str | None = None) -> None:
     encoder_checkpoint = pretrain_checkpoint_name(config)
 
     policy = Policy(config["policy_config"],
-                        encoder_checkpoint=encoder_checkpoint).to(device)
+                    encoder_checkpoint=encoder_checkpoint).to(device)
 
     # TODO: init_params per train step to enable multi-task learning?
     with indent_logs():
@@ -325,8 +326,8 @@ if __name__ == "__main__":
 
         "policy_config": {
             "policy": args.policy,
-            "disk_read": \
-                args.pre_embedding or (args.kp_pre_complete is not None),
+            "disk_read":
+            args.pre_embedding or (args.kp_pre_complete is not None),
             "pre_embedding": args.pre_embedding,
             "kp_pre_encoded": args.kp_pre_complete is not None,
 
@@ -344,7 +345,7 @@ if __name__ == "__main__":
             "encoder_config": selected_encoder_config,
             "encoder_suffix": args.encoder_suffix,
             "end-to-end": False,  # whether or not to train the encoder too
-            },
+        },
 
         "dataset_config": {
             "feedback_type": args.feedback_type,

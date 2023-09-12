@@ -4,12 +4,12 @@ from pathlib import Path
 
 import numpy as np
 import torch
+import wandb
 from loguru import logger
 from tqdm.auto import tqdm
 
 import config as default_config
 import utils.logging  # noqa
-import wandb
 from dataset.dc import DenseCorrespondenceDataset
 from encoder import encoder_names, encoder_switch
 from encoder.representation_learner import RepresentationLearner
@@ -87,11 +87,11 @@ def run_training_step(encoder: RepresentationLearner, config: dict,
         batch = next(train_iterator)
 
         training_metrics = encoder.update_params(
-                    batch, dataset_size=no_train_obs,
-                    batch_size=config["dataset_config"]["batch_size"])
+            batch, dataset_size=no_train_obs,
+            batch_size=config["dataset_config"]["batch_size"])
 
         if training_metrics is not None:
-           break
+            break
 
     return training_metrics
 
@@ -149,7 +149,6 @@ def main(config: dict, save_model: bool = True, path: str | None = None
     if save_model:
         logger.info("Saving current model checkpoint.")
         encoder.to_disk(file_name)
-
 
 
 if __name__ == "__main__":

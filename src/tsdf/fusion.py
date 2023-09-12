@@ -41,7 +41,7 @@ class TSDFVolume:
 
         vol_bnds = np.asarray(vol_bnds)
         assert vol_bnds.shape == (
-          3, 2), "[!] `vol_bnds` should be of shape (3, 2)."
+            3, 2), "[!] `vol_bnds` should be of shape (3, 2)."
 
         # Define voxel volume parameters
         self._vol_bnds = vol_bnds
@@ -51,7 +51,7 @@ class TSDFVolume:
 
         # Adjust volume bounds and ensure C-order contiguous
         self._vol_dim = np.ceil(
-          (self._vol_bnds[:, 1]-self._vol_bnds[:, 0])/self._voxel_size).copy(
+            (self._vol_bnds[:, 1]-self._vol_bnds[:, 0])/self._voxel_size).copy(
             order='C').astype(int)
         self._vol_bnds[:, 1] = self._vol_bnds[:, 0] + \
             self._vol_dim*self._voxel_size
@@ -59,8 +59,8 @@ class TSDFVolume:
             order='C').astype(np.float32)
 
         logger.info("Voxel volume size: {} x {} x {} - # points: {:,}".format(
-          self._vol_dim[0], self._vol_dim[1], self._vol_dim[2],
-          self._vol_dim[0]*self._vol_dim[1]*self._vol_dim[2])
+            self._vol_dim[0], self._vol_dim[1], self._vol_dim[2],
+            self._vol_dim[0]*self._vol_dim[1]*self._vol_dim[2])
         )
 
         # Initialize pointers to voxel volume in CPU memory
@@ -248,7 +248,7 @@ class TSDFVolume:
         # Fold RGB color image into a single channel image
         color_im = color_im.astype(np.float32)
         color_im = np.floor(
-          color_im[..., 2]*self._color_const + color_im[..., 1]*256 + color_im[..., 0])
+            color_im[..., 2]*self._color_const + color_im[..., 1]*256 + color_im[..., 0])
 
         # GPU mode: integrate voxel volume (calls CUDA kernel)
         if self.gpu_mode:
@@ -261,28 +261,28 @@ class TSDFVolume:
                                      cuda.InOut(
                                          self._vol_origin.astype(np.float32)),
                                      cuda.InOut(
-                                       cam_intr.reshape(-1).astype(np.float32)),
+                                         cam_intr.reshape(-1).astype(np.float32)),
                                      cuda.InOut(
-                                       cam_pose.reshape(-1).astype(np.float32)),
+                                         cam_pose.reshape(-1).astype(np.float32)),
                                      cuda.InOut(np.asarray([
-                                      gpu_loop_idx,
-                                      self._voxel_size,
-                                      im_h,
-                                      im_w,
-                                      self._trunc_margin,
-                                      obs_weight
-                                         ], np.float32)),
+                                         gpu_loop_idx,
+                                         self._voxel_size,
+                                         im_h,
+                                         im_w,
+                                         self._trunc_margin,
+                                         obs_weight
+                                     ], np.float32)),
                                      cuda.InOut(
-                                      color_im.reshape(-1).astype(np.float32)),
+                                         color_im.reshape(-1).astype(np.float32)),
                                      cuda.InOut(
-                                      depth_im.reshape(-1).astype(np.float32)),
+                                         depth_im.reshape(-1).astype(np.float32)),
                                      block=(
                                          self._max_gpu_threads_per_block, 1, 1),
                                      grid=(
-                                      int(self._max_gpu_grid_dim[0]),
-                                      int(self._max_gpu_grid_dim[1]),
-                                      int(self._max_gpu_grid_dim[2]),
-                                         )
+                                         int(self._max_gpu_grid_dim[0]),
+                                         int(self._max_gpu_grid_dim[1]),
+                                         int(self._max_gpu_grid_dim[2]),
+                                     )
                                      )
         else:  # CPU mode: integrate voxel volume (vectorized implementation)
             # Convert voxel grid coordinates to pixel coordinates
@@ -382,7 +382,7 @@ class TSDFVolume:
 
         # Marching cubes
         verts, faces, norms, vals = measure.marching_cubes(
-          tsdf_vol, level=0)
+            tsdf_vol, level=0)
         verts_ind = np.round(verts).astype(int)
         # voxel grid coordinates to world coordinates
         verts = verts*self._voxel_size+self._vol_origin
@@ -466,9 +466,9 @@ def meshwrite(filename, verts, faces, norms, colors):
     # Write vertex list
     for i in range(verts.shape[0]):
         ply_file.write("%f %f %f %f %f %f %d %d %d\n" % (
-          verts[i, 0], verts[i, 1], verts[i, 2],
-          norms[i, 0], norms[i, 1], norms[i, 2],
-          colors[i, 0], colors[i, 1], colors[i, 2],
+            verts[i, 0], verts[i, 1], verts[i, 2],
+            norms[i, 0], norms[i, 1], norms[i, 2],
+            colors[i, 0], colors[i, 1], colors[i, 2],
         ))
 
     # Write face list
@@ -501,8 +501,8 @@ def pcwrite(filename, xyzrgb):
     # Write vertex list
     for i in range(xyz.shape[0]):
         ply_file.write("%f %f %f %d %d %d\n" % (
-          xyz[i, 0], xyz[i, 1], xyz[i, 2],
-          rgb[i, 0], rgb[i, 1], rgb[i, 2],
+            xyz[i, 0], xyz[i, 1], xyz[i, 2],
+            rgb[i, 0], rgb[i, 1], rgb[i, 2],
         ))
 
 

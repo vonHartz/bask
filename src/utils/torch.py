@@ -12,6 +12,7 @@ identity_quaternion = torch.tensor([1, 0, 0, 0], dtype=torch.float32)
 
 quarter_rot_angle = torch.tensor(math.pi / 2, dtype=torch.float32)
 
+
 def identity_quaternions(shape):
     """
     Create a batch of identity quaternions.
@@ -66,11 +67,13 @@ def cat(*tensors, dim=0):
 def stack(*tensors, dim=0):
     return torch.stack(tensors, dim=dim)
 
+
 def eye_like(batched_homtrans):
     batched_eye = torch.zeros_like(batched_homtrans)
     batched_eye[:, range(4), range(4)] = 1
 
     return batched_eye
+
 
 def conjugate_quat(quaternion):
     assert quaternion.shape[-1] == 4
@@ -99,6 +102,7 @@ def quaternion_multiply(quaternion0, quaternion1):
 
     return torch.stack((x, y, z, w), -1)
 
+
 def quaternion_multiply_realfirst(quaternion0, quaternion1):
     w0, x0, y0, z0 = torch.unbind(quaternion0, -1)
     w1, x1, y1, z1 = torch.unbind(quaternion1, -1)
@@ -109,6 +113,7 @@ def quaternion_multiply_realfirst(quaternion0, quaternion1):
     w = w0*w1 - x0*x1 - y0*y1 - z0*z1
 
     return torch.stack((w, x, y, z), -1)
+
 
 def compute_angle_between_quaternions(q, r):
     """
@@ -199,7 +204,7 @@ def axis_angle_to_quaternion(axis_angle: torch.Tensor) -> torch.Tensor:
     Returns:
         quaternions with real part first, as tensor of shape (..., 4).
     """
-    angles = torch.norm(axis_angle, p=2, dim=-1, keepdim=True) # type: ignore
+    angles = torch.norm(axis_angle, p=2, dim=-1, keepdim=True)  # type: ignore
     half_angles = angles * 0.5
     eps = 1e-6
     small_angles = angles.abs() < eps
@@ -383,7 +388,8 @@ def quaternion_to_axis_angle(quaternions: torch.Tensor) -> torch.Tensor:
             turned anticlockwise in radians around the vector's
             direction.
     """
-    norms = torch.norm(quaternions[..., 1:], p=2, dim=-1, keepdim=True) # type: ignore
+    norms = torch.norm(quaternions[..., 1:], p=2,
+                       dim=-1, keepdim=True)  # type: ignore
     half_angles = torch.atan2(norms, quaternions[..., :1])
     angles = 2 * half_angles
     eps = 1e-6
@@ -402,10 +408,10 @@ def quaternion_to_axis_angle(quaternions: torch.Tensor) -> torch.Tensor:
 
 def quaternion_to_euler(quaternions: torch.Tensor,
                         prefer_positives: bool = False,
-                        threshold: float=-3.) -> torch.Tensor:
+                        threshold: float = -3.) -> torch.Tensor:
     logger.warning("Euler angles should only be used for human "
-                    "interfaces, such as plotting, and not for "
-                    "any computations. Use quaternions or matrices!")
+                   "interfaces, such as plotting, and not for "
+                   "any computations. Use quaternions or matrices!")
     w, x, y, z = torch.unbind(quaternions, -1)
     t0 = +2.0 * (w * x + y * z)
     t1 = +1.0 - 2.0 * (x * x + y * y)
@@ -457,8 +463,8 @@ def _axis_angle_rotation(axis: str, angle: torch.Tensor) -> torch.Tensor:
     return torch.stack(R_flat, -1).reshape(angle.shape + (3, 3))
 
 
-def euler_angles_to_matrix(euler_angles: torch.Tensor, convention: str="XYZ"
-        ) -> torch.Tensor:
+def euler_angles_to_matrix(euler_angles: torch.Tensor, convention: str = "XYZ"
+                           ) -> torch.Tensor:
     """
     Convert rotations given as Euler angles in radians to rotation matrices.
 

@@ -171,7 +171,7 @@ class KeypointSelector(object):
         # self.fig = plt.figure()
         # self.axes = self.fig.add_subplot(111)
 
-        #NOTE hat opencv 4.3.0 pip-installed. Remember there was some issue otherwise
+        # NOTE hat opencv 4.3.0 pip-installed. Remember there was some issue otherwise
 
         cv2.namedWindow(PREVIEW_WINDOW_NAME)
 

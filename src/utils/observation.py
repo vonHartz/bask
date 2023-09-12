@@ -415,7 +415,7 @@ def downsample_tensordict_by_idx(traj: TensorDictBase, indeces: list[int]
 
 def get_ordered_attributes_from_tensordict(
         data: TensorDictBase, order: Iterable[str], stack=False
-        ) -> torch.Tensor | tuple[torch.Tensor]:
+) -> torch.Tensor | tuple[torch.Tensor]:
     """
     Helper function to get the attributes of a TensorDict in the given order.
 
@@ -459,6 +459,7 @@ def get_camera_obs(self, stack=False) -> torch.Tensor | tuple[torch.Tensor]:
     """
     return get_ordered_attributes_from_tensordict(
         self.cameras, self.get_camera_names(), stack=stack)
+
 
 def get_camera_names(self) -> tuple[str]:
     """
@@ -700,6 +701,7 @@ def random_obs_dropout(obs: SceneObservation,   # type: ignore
                 obs = dropout_single_camera(obs.cameras[cam], attributes)
 
     return obs
+
 
 def tensor_dict_equal(td1: TensorDictBase, td2: TensorDictBase) -> bool:
     """

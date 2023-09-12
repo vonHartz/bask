@@ -8,6 +8,8 @@ from loguru import logger
 logger_indentation = ContextVar('logger_indentation', default=0)
 
 # Context manager for indentation taken from https://github.com/Delgan/loguru/issues/424#issuecomment-826074098  # noqa: E501
+
+
 @contextmanager
 def indent_logs(indent_size: int = 2):
     val = logger_indentation.get()
@@ -29,6 +31,7 @@ class DuplicateFilter():
         unseen = (msg := record["message"]) not in self.msgs
         self.msgs.add(msg)
         return unseen or not record['extra'].get('filter', True)
+
 
 def write_tqdm(msg):
     tqdm.tqdm.write(msg, end="")
@@ -52,6 +55,7 @@ def setup_logger():
 
     return logger
 
+
 def log_constructor(init_func):
     """
     Simple decorator to log the initialization of a class. Logs the class name
@@ -66,6 +70,7 @@ def log_constructor(init_func):
             return init_func(*args, **kwargs)
     return wrapper
 
+
 def indent_func_log(func):
     """
     Simple decorator to indent all logs that are created during the execution
@@ -76,5 +81,6 @@ def indent_func_log(func):
         with indent_logs():
             return func(*args, **kwargs)
     return wrapper
+
 
 logger = setup_logger()

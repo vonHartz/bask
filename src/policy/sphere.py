@@ -15,7 +15,7 @@ class SpherePolicy():
              0.22182107, 0.31515279, 1.],
             [0.23925975, 0.34963048, 1.40325511, 0.12973945, 0.92903697,
              -0.22003566, 0.2676608, 1.],
-            ])
+        ])
 
         self.path_planner_func = kwargs["path_planner_func"]
         self.current_path = None

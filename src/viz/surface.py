@@ -55,11 +55,13 @@ def depth_map_with_points_overlay_uv_list(depth, indeces, mask=None,
 
     plt.show()
 
+
 def scatter3d(tens):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     # color dots by depth
-    im = ax.scatter(tens[:, 0], tens[:, 1], tens[:, 2], c=tens[:, 2], cmap='Blues')
+    im = ax.scatter(tens[:, 0], tens[:, 1], tens[:, 2],
+                    c=tens[:, 2], cmap='Blues')
     fig.colorbar(im, ax=ax)
     ax.scatter(0, 0, 0, color='red')
 

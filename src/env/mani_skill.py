@@ -293,7 +293,8 @@ class ManiSkillEnv(BaseEnvironment):
         except Exception as e:
             logger.info("Skipping invalid action {}.".format(action))
 
-            logger.warning("Don't yet know how ManiSkill handles invalid actions")
+            logger.warning(
+                "Don't yet know how ManiSkill handles invalid actions")
             raise e
 
             next_obs, reward, done, info = self.gym_env.step(zero_action)
@@ -366,7 +367,7 @@ class ManiSkillEnv(BaseEnvironment):
         ee_pose = torch.Tensor(obs['extra']['tcp_pose'])
         object_poses = dict_to_tensordict({
             k: torch.Tensor(v) for k, v in obs['extra'].items()
-                if k.endswith('pose') and k != 'tcp_pose'
+            if k.endswith('pose') and k != 'tcp_pose'
         })
 
         joint_pos = torch.Tensor(obs['agent']['qpos'])
@@ -385,9 +386,9 @@ class ManiSkillEnv(BaseEnvironment):
                         torch.uint8),
                     'extr': torch.Tensor(cam_ext[c]),
                     'intr': torch.Tensor(cam_int[c])
-            }, batch_size=empty_batchsize
-            ) for c in self.cameras
-        }
+                }, batch_size=empty_batchsize
+                ) for c in self.cameras
+            }
         )
 
         obs = SceneObservation(cameras=multicam_obs, ee_pose=ee_pose,
@@ -397,7 +398,6 @@ class ManiSkillEnv(BaseEnvironment):
                                batch_size=empty_batchsize)
 
         return obs
-
 
     def get_replayed_obs(self):
         # To be used from extract_demo.py

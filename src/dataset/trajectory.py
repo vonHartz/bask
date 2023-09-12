@@ -117,7 +117,7 @@ class Trajectory():
         metadata = {
             "len": len(indeces),
             "object_label_gt": object_label_gt,
-            }
+        }
 
         with open(dir / METADATA_FILENAME, 'w') as f:
             json.dump(metadata, f)

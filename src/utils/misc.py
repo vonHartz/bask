@@ -18,6 +18,7 @@ from utils.logging import indent_logs
 def invert_dict(dictionary):
     return {v: k for k, v in dictionary.items()}
 
+
 def random_string(str_len=8):
     alphabet = string.ascii_lowercase + string.digits
     return ''.join(random.choices(alphabet, k=str_len))
@@ -86,7 +87,7 @@ def load_replay_memory(config, path=None):
     return memory
 
 
-def policy_checkpoint_name(config: dict, create_suffix: bool =False
+def policy_checkpoint_name(config: dict, create_suffix: bool = False
                            ) -> tuple[str, str]:
     if create_suffix and config["policy_config"].get("suffix"):
         raise ValueError("Should not pass suffix AND ask to create one.")
@@ -217,7 +218,7 @@ def configure_class_instance(instance, class_keys, config):
         v = config.get(k, None)
         if v is None:
             logger.warning(
-                    "Key {} not in encoder config. Assuming False.", k)
+                "Key {} not in encoder config. Assuming False.", k)
             v = False
         setattr(instance, k, v)
 
@@ -228,6 +229,7 @@ def get_and_log_failure(dictionary, key, default=None):
     else:
         logger.info("Key {} not in config. Assuming {}.", key, default)
         return default
+
 
 def multiply_iterable(l):
     return reduce(lambda x, y: x*y, l)

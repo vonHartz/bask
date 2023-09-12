@@ -4,18 +4,18 @@ import numpy as np
 import torch
 from loguru import logger
 
-from env import Environment
+import tsdf.fusion as fusion
 import utils.logging  # noqa
 from dataset.scene import SubSampleTypes
-
+from env import Environment
 from tsdf.cluster import Cluster  # type: ignore
-import tsdf.fusion as fusion
-from tsdf.filter import (filter_plane_from_mesh_and_pointcloud,
-                         gripper_dists, coordinate_boxes)
-from utils.cuda import try_empty_cuda_cache, try_make_context, try_destroy_context, try_debug_memory
-from utils.select_gpu import device
+from tsdf.filter import (coordinate_boxes,
+                         filter_plane_from_mesh_and_pointcloud, gripper_dists)
+from utils.cuda import (try_debug_memory, try_destroy_context,
+                        try_empty_cuda_cache, try_make_context)
 from utils.misc import apply_machine_config, load_replay_memory
 from utils.random import configure_seeds
+from utils.select_gpu import device
 
 # import viz.image_series as viz_image_series
 
@@ -44,7 +44,7 @@ def main(config: dict, path: str | None = None):
         fusion_scene = torch.cat([v for _, v in fusion_views.items()])
 
         # fusion_scene is SingleCamSceneObservation (stacked from all cams)
-        rgb = fusion_scene.rgb.numpy() # type: ignore
+        rgb = fusion_scene.rgb.numpy()  # type: ignore
         depth = fusion_scene.depth.numpy()  # type: ignore
         extrinsics = fusion_scene.extr.numpy()  # type: ignore
         intrinsics = fusion_scene.intr.numpy()  # type: ignore
@@ -80,7 +80,6 @@ def main(config: dict, path: str | None = None):
         fitted_cluster = cluster.fit(vertices)
         # cluster labels start at zero, noisy is -1, so + 1 for object labels
         pc_labels = fitted_cluster.labels_ + 1
-
 
         # Load entire scene for mask generation.
         scene_views = replay_memory.get_scene(

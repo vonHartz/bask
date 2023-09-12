@@ -4,7 +4,6 @@ from encoder.keypoints import KeypointsPredictor
 from encoder.keypoints_gt import GTKeypointsPredictor
 from encoder.monet import Monet
 
-
 encoder_switch = {
     "bvae": BVAE,
     "monet": Monet,

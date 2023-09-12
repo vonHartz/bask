@@ -29,10 +29,10 @@ encoder_configs = {
     "dummy": None,
     "cnn": {
         "end-to-end": True
-        },
+    },
     "cnnd": {
         "end-to-end": True
-        },
+    },
     "transporter": {
         "pretrain": {
             "dataset_config": {},

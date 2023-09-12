@@ -44,7 +44,6 @@ def main(config):
         data_root=save_path / config["dataset_config"]["dataset_name"],
         image_size=config["env_config"]["image_size"])
 
-
     env.reset()  # extra reset to correct set up of camera poses in first obs
 
     # TODO: policy config?
@@ -65,7 +64,7 @@ def main(config):
                 start_time = time.time()
 
                 action, lstm_state, _ = policy.predict(obs, lstm_state)
-                next_obs, _ , done, _ = env.step(action)
+                next_obs, _, done, _ = env.step(action)
                 obs.action = torch.Tensor(action)
                 obs.feedback = torch.Tensor([1])
                 replay_memory.add_observation(obs)
@@ -98,7 +97,8 @@ def main(config):
                     loop_sleep(start_time)
 
     except KeyboardInterrupt:
-        logger.info("Keyboard interrupt. Attempting graceful shutdown of env...")
+        logger.info(
+            "Keyboard interrupt. Attempting graceful shutdown of env...")
         env.close()
 
     return

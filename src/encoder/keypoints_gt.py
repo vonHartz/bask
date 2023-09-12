@@ -162,7 +162,7 @@ class GTKeypointsPredictor(encoder.keypoints.KeypointsPredictor):
 
         kp = torch.cat((torch.cat(kp_x, dim=-1)*2/self.image_width - 1,
                         torch.cat(kp_y, dim=-1)*2/self.image_height - 1),
-                        dim=-1).to(device)
+                       dim=-1).to(device)
 
         kp_z = torch.cat(kp_z, dim=-1).to(device)
 
@@ -196,7 +196,7 @@ class GTKeypointsPredictor(encoder.keypoints.KeypointsPredictor):
     def select_reference_descriptors(self, dataset, traj_idx=0, img_idx=0,
                                      object_labels=None, cam="wrist"):
         ref_obs = dataset.sample_data_point_with_ground_truth(
-                cam=cam, img_idx=img_idx, traj_idx=traj_idx)
+            cam=cam, img_idx=img_idx, traj_idx=traj_idx)
 
         self.ref_depth = ref_obs.depth.to(device)
         self.ref_object_poses = ref_obs.object_poses.to(device)
@@ -282,9 +282,10 @@ class GTKeypointsPredictor(encoder.keypoints.KeypointsPredictor):
                     mask=ref_obs.mask.cpu().numpy(),
                     object_labels=object_labels,
                     # object_poses=self.ref_object_pose.cpu().numpy()
-                    )
+                )
                 local_ref = model_based_vision.raw_pixels_to_camera_frame(
-                    ref_pixels_stacked.unsqueeze(0), self.ref_depth.unsqueeze(0),
+                    ref_pixels_stacked.unsqueeze(
+                        0), self.ref_depth.unsqueeze(0),
                     self.ref_int.unsqueeze(0))
                 scatter3d(local_ref[0].cpu().numpy())
                 scatter3d(self.ref_pixel_world.cpu().numpy())

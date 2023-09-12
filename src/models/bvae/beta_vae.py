@@ -48,7 +48,7 @@ class BetaVAE(BaseVAE):
             nn.ReLU(),
             nn.Linear(config["hidden_dims"][-1],
                       config["hidden_dims"][-2]*8*8)
-            )
+        )
 
         for i, o, k, s, p in reversed(list(
             zip(config["hidden_dims"][1:], config["hidden_dims"][:-1],

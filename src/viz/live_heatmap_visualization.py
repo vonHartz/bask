@@ -167,7 +167,7 @@ class HeatmapVisualization(object):
 
     def _get_descriptor(self, tensor):
         return channel_front2back(self.encoder.compute_descriptor(
-                tensor).detach().squeeze(0).cpu()).numpy()
+            tensor).detach().squeeze(0).cpu()).numpy()
 
     def _compute_descriptors(self):
         """

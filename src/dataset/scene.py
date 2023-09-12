@@ -79,7 +79,8 @@ class SceneDataset(Dataset):
     def __init__(self, *,
                  allow_creation: bool = False,
                  camera_names: tuple[str] | None = None,
-                 image_size: tuple[int, int] | tuple[None, None] = (None, None),
+                 image_size: tuple[int, int] | tuple[None, None] = (
+                     None, None),
                  image_crop: tuple[int, int, int, int] | None = None,
                  subsample_by_difference: bool = True,
                  subsample_to_length: int | None = None,
@@ -153,7 +154,6 @@ class SceneDataset(Dataset):
                                   255,
                                   16777215]
 
-
         self.ground_truth_object_pose = ground_truth_object_pose
 
         self.shorten_cam_names = True
@@ -169,7 +169,6 @@ class SceneDataset(Dataset):
 
         self.reset_current_traj()
 
-
     def update_camera_crop(self, image_crop: tuple[int, int, int, int] | None
                            ) -> None:
         """
@@ -184,7 +183,7 @@ class SceneDataset(Dataset):
         self.image_crop = image_crop
 
         if image_crop is not None:
-            self.image_width -= image_crop[0] - image_crop[1] # type: ignore
+            self.image_width -= image_crop[0] - image_crop[1]  # type: ignore
             self.image_height -= image_crop[2] - image_crop[3]  # type: ignore
 
             child_sets = getattr(self, SMO_DATASETS) or {}
@@ -193,7 +192,6 @@ class SceneDataset(Dataset):
 
             logger.info("Applied crop and updated camera dims to {}x{}",
                         self.image_width, self.image_height)
-
 
     @cached_property
     def _metadata_filename(self) -> Path:
@@ -394,7 +392,7 @@ class SceneDataset(Dataset):
             self.camera_names,   # type: ignore
             self.subsample_by_difference, self.subsample_to_length)
 
-    def add_observation(self, obs: SceneObservation) -> None: # type: ignore
+    def add_observation(self, obs: SceneObservation) -> None:  # type: ignore
         self._current_trajectory.add(obs)
 
     def generate_trajectory_dir_name(self) -> str:
@@ -465,11 +463,12 @@ class SceneDataset(Dataset):
                          sample_attr: dict[str, str] | None = None,
                          camera_attr: dict[str, dict[str, str]] | None = None,
                          encoder_name: str | None = None,
-                         embedding_attr: dict[str, dict[str, str]] | None = None,
+                         embedding_attr: dict[str,
+                                              dict[str, str]] | None = None,
                          encoding_name: str | None = None,
-                         encoding_attr: dict[str, str] | None =None,
+                         encoding_attr: dict[str, str] | None = None,
                          as_dict: bool = False, as_single_cam: bool = False
-        ) -> dict | SingleCamSceneObservation | SceneObservation:  # type: ignore
+                         ) -> dict | SingleCamSceneObservation | SceneObservation:  # type: ignore
         """
         Load a single data point from disk.
 
@@ -554,9 +553,9 @@ class SceneDataset(Dataset):
                         cam_data[k] = val
                     except FileNotFoundError as e:
                         logger.error("Could not find the requested file. "
-                                    "Did you request a non-set attribute? "
-                                    "Requested traj {}, attr {}, obs {}.",
-                                    traj_idx, n, img_idx)
+                                     "Did you request a non-set attribute? "
+                                     "Requested traj {}, attr {}, obs {}.",
+                                     traj_idx, n, img_idx)
                         raise e
 
             if cam in embedding_attr.keys():
@@ -566,9 +565,9 @@ class SceneDataset(Dataset):
                                                       encoder_name=encoder_name)
                     except FileNotFoundError as e:
                         logger.error("Could not find the requested file. "
-                                    "Did you request a non-set attribute? "
-                                    "Requested traj {}, attr {}, obs {}, enc {}",
-                                    traj_idx, k, img_idx, encoder_name)
+                                     "Did you request a non-set attribute? "
+                                     "Requested traj {}, attr {}, obs {}, enc {}",
+                                     traj_idx, k, img_idx, encoder_name)
                         raise e
 
             if not as_dict and not as_single_cam:
@@ -654,7 +653,7 @@ class SceneDataset(Dataset):
                         collapse_labels: bool = False,
                         labels: Iterable[int] | None = None,
                         get_rgb: bool = True,
-                        get_int: bool =False,
+                        get_int: bool = False,
                         get_ext: bool = False,
                         get_depth: bool = True,
                         get_mask: bool = True,
@@ -806,7 +805,7 @@ class SceneDataset(Dataset):
         return collate(obs)  # type: ignore
 
     def sample_data_point_with_object_labels(
-            self, cam: str = "wrist", traj_idx: int | None =None,
+            self, cam: str = "wrist", traj_idx: int | None = None,
             img_idx: int | None = None, get_mask: bool = True,
             mask_type=MaskTypes.GT) -> SingleCamObservation:  # type: ignore
 
@@ -892,7 +891,7 @@ class SceneDataset(Dataset):
         else:
             raise DeprecationWarning(
                 "Unexpected combination of arguments. Still using 10er system?"
-                )
+            )
 
         return mask
 
@@ -940,7 +939,7 @@ class SceneDataset(Dataset):
     def get_img_idx_with_single_object_visible(
             self, traj_idx: int, labels: Iterable[int],
             mask_type: MaskTypes, num_attempts: int = 100, cam: str = "wrist"
-            ) -> int | None:
+    ) -> int | None:
         """
         Try to get an image of a MO scene where only one object is visible.
         If none can be found, return None.
@@ -1023,7 +1022,6 @@ class SceneDataset(Dataset):
             stop = start + fragment_length
         load_iter = iter(range(start, stop))
 
-
         # Intrinsics are the only flat attribute (ie they don't change over
         # time). But the overhead from loading them multiple times should be
         # relatively small, so we don't bother with special handling anymore.
@@ -1056,7 +1054,7 @@ class SceneDataset(Dataset):
 
         return traj
 
-    def add_embedding(self, traj_idx: int , obs_idx: int, cam_name: str,
+    def add_embedding(self, traj_idx: int, obs_idx: int, cam_name: str,
                       emb_name: str, encoding: torch.Tensor, encoder_name: str
                       ) -> None:
         traj_path = self._paths[traj_idx]
@@ -1185,7 +1183,6 @@ class SceneDataset(Dataset):
             raise ValueError("Unexpected subsample type {}".format(type))
 
         return downsample_tensordict_by_idx(traj, indeces)
-
 
     def add_tsdf_masks(self, traj_idx: int, cam_name: str, masks: torch.Tensor,
                        labels: list[int]) -> None:

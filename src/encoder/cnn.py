@@ -50,7 +50,7 @@ class CNN(encoder.representation_learner.RepresentationLearner):
         dim_mapping = {
             (256, 256): 256,
             (360, 480): 690,
-            }
+        }
 
         return dim_mapping[image_dim] * n_cams
 

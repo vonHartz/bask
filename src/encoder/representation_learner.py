@@ -124,7 +124,6 @@ class RepresentationLearner(nn.Module):
         logger.info("Saving encoder checkpoint at {}", checkpoint_path)
         torch.save(self.state_dict(), checkpoint_path)
 
-
     @staticmethod
     def add_gaussian_noise(coordinates: torch.Tensor,
                            noise_scale: float | torch.Tensor,

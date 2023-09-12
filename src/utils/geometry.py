@@ -333,10 +333,11 @@ def arccos_star(rho):
 
 
 def quat_log_e(q, reg=1e-6):
-    if abs(q[0]- 1.0) > reg:
+    if abs(q[0] - 1.0) > reg:
         return arccos_star(q[0]) * (q[1:]/np.linalg.norm(q[1:]))
     else:
         return np.zeros(3)
+
 
 def log_e(dp):
     assert len(dp.shape) == 1
@@ -354,6 +355,7 @@ def log_e(dp):
     out = np.concatenate(out, axis=0)
 
     return out
+
 
 def quaternion_diff(q1, q2):
     return quaternion_multiply(q1, conjugate_quat(q2))

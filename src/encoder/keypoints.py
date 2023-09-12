@@ -5,13 +5,13 @@ import numpy as np
 import torch
 import torchvision
 import tqdm
+import wandb
 from loguru import logger
 
 import dense_correspondence.loss.loss_composer as dc_loss_composer
 import encoder.representation_learner
 import models.keypoints.keypoints as keypoints
 import models.keypoints.model_based_vision as model_based_vision
-import wandb
 from dataset.bc import BCDataset
 from dense_correspondence.correspondence_finder import \
     random_sample_from_masked_image_torch
@@ -105,7 +105,7 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
         self.projection = get_conf(encoder_config, "projection", False)
 
         self.keypoint_dimension = 2 if self.projection is ProjectionTypes.NONE\
-             else 3
+            else 3
 
         self.model = keypoints.KeypointsModel(encoder_config)
 
@@ -143,9 +143,9 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
             elif schedule is LRScheduleTypes.COSINE_WR:
                 self.scheduler = \
                     torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
-                       self.optimizer,
-                       T_0=pretrain_config.get("T_0"),
-                       T_mult=pretrain_config.get("T_mult"))
+                        self.optimizer,
+                        T_0=pretrain_config.get("T_0"),
+                        T_mult=pretrain_config.get("T_mult"))
             else:
                 raise ValueError("Unexpected schedule {}".format(schedule))
 
@@ -205,7 +205,6 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
         self.pos_x = torch.from_numpy(pos_x).float().to(device)
         self.pos_y = torch.from_numpy(pos_y).float().to(device)
 
-
     def reset_episode(self):
         if self.filter is not None:
             self.filter.reset()
@@ -240,7 +239,7 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
             "train-background_non_match_loss": background_non_match_loss,
             "train-blind_non_match_loss": blind_non_match_loss,
             "train-lr": self.scheduler.get_last_lr()[0],
-            }
+        }
         descriptor_distances = {"train-" + k: wandb.Histogram(v) for k,
                                 v in descriptor_distances.items()}
 
@@ -263,7 +262,7 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
             "eval-masked_non_match_loss": masked_non_match_loss,
             "eval-background_non_match_loss": background_non_match_loss,
             "eval-blind_non_match_loss": blind_non_match_loss
-            }
+        }
         descriptor_distances = {"eval-" + k: wandb.Histogram(v) for k,
                                 v in descriptor_distances.items()}
 
@@ -388,11 +387,10 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
         n_cams = len(rgb)
 
         if self.disk_read_embedding:
-           descriptor = tuple((o.descriptor for o in camera_obs))
+            descriptor = tuple((o.descriptor for o in camera_obs))
         else:
             descriptor = tuple(self.compute_descriptor_batch(r, upscale=False)
-                            for r in rgb)
-
+                               for r in rgb)
 
         if self.prior_type is PriorTypes.PARTICLE_FILTER:
             self.filter.update(
@@ -511,7 +509,7 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
             pass
         elif projection == ProjectionTypes.EGO:
             raise ValueError("Ego projection makes no sense for vanilla kp, "
-                              "only for GT or particle filter models.")
+                             "only for GT or particle filter models.")
         elif projection == ProjectionTypes.UVD:
             kp = append_depth_to_uv(
                 kp, depth, self.image_width - 1, self.image_height - 1)
@@ -608,7 +606,7 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
     def select_reference_descriptors(
             self, dataset: BCDataset, traj_idx: int = 0, img_idx: int = 0,
             object_labels: Iterable[int] | None = None, cam: str = "wrist"
-            ) -> None:
+    ) -> None:
         """
         Select reference descriptors from one observation in the replay memory.
         Depending on config, randomly sampled or manually selected.
@@ -640,7 +638,7 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
         """
 
         ref_obs = dataset.sample_data_point_with_object_labels(
-                cam=cam, img_idx=img_idx, traj_idx=traj_idx)
+            cam=cam, img_idx=img_idx, traj_idx=traj_idx)
 
         object_labels = object_labels or dataset.get_object_labels()
 
@@ -839,7 +837,7 @@ class KeypointsPredictor(encoder.representation_learner.RepresentationLearner):
                                            img_idx=0, cam="wrist"):
 
         ref_obs = replay_memory.sample_data_point_with_ground_truth(
-                cam=cam, img_idx=img_idx, traj_idx=traj_idx)
+            cam=cam, img_idx=img_idx, traj_idx=traj_idx)
 
         rgb = ref_obs.rgb.to(device)
         mask = ref_obs.mask.to(device)
